@@ -2,58 +2,89 @@
   "intents": [
     {
       "tag": "greeting",
-      "patterns": ["hello","hi","hey","good morning","good evening","what's up","howdy","greetings"],
-      "responses": [{"short": "Hello! I'm your NLP Learning Assistant.","explanation": "I'm here to help you understand concepts in programming, math, data science, and more.","example": "Try asking: 'What is a variable?' or 'Explain loops in Python.'","summary": "Ask me anything — I'm here to help you learn!"}]
+      "patterns": [
+        "hello", "hi", "hey", "good morning", "good evening",
+        "what's up", "howdy", "greetings", "hi there", "hello there"
+      ],
+      "answer": "Hello! I'm your NLP Learning Assistant — ask me anything about NLP, machine learning, or related concepts.",
+      "steps": [
+        "Type a question about an NLP or ML topic.",
+        "I'll respond with a structured explanation tailored to your level.",
+        "Use the 'level' field (beginner / intermediate / advanced) to adjust depth."
+      ],
+      "analogy": "Think of me as a patient tutor who adjusts their language based on how much you already know.",
+      "deeper": "Under the hood I use TF-IDF vectorisation and Logistic Regression to classify your intent, then look up a pre-written teaching response.",
+      "summary": "Ask away — I'm here to help you learn NLP step by step.",
+      "practice_questions": [
+        "What is tokenisation?",
+        "Can you explain TF-IDF at a beginner level?"
+      ]
     },
     {
-      "tag": "farewell",
-      "patterns": ["bye","goodbye","see you","take care","exit","quit","later"],
-      "responses": [{"short": "Goodbye! Keep learning!","explanation": "It was great helping you today. Come back anytime you have questions.","example": "Next time, try asking about Python functions or machine learning basics.","summary": "Learning never stops — see you soon!"}]
+      "tag": "tfidf",
+      "patterns": [
+        "what is TF-IDF", "explain TF-IDF", "how does TF-IDF work",
+        "term frequency inverse document frequency", "TF IDF",
+        "tfidf vectorizer", "what does TF-IDF do", "TF-IDF explained",
+        "TF-IDF in NLP", "why use TF-IDF", "TF-IDF formula",
+        "TF-IDF example", "TF-IDF score", "compute TF-IDF"
+      ],
+      "answer": "TF-IDF (Term Frequency–Inverse Document Frequency) is a numerical statistic that reflects how important a word is to a document in a collection.",
+      "steps": [
+        "TF (Term Frequency): count how often a word appears in a document, divided by the total number of words.",
+        "IDF (Inverse Document Frequency): log(total documents / documents containing the word). Rare words get a higher IDF.",
+        "TF-IDF = TF × IDF. High score → the word is frequent in this document but rare across the corpus.",
+        "Each document becomes a vector of TF-IDF scores, one value per vocabulary word.",
+        "These vectors can be fed into classifiers like Logistic Regression."
+      ],
+      "analogy": "Imagine you're reading a book about 'Python'. The word 'the' appears constantly (high TF) but it's also common in every book (high DF → low IDF), so it gets a low TF-IDF. The word 'decorator' appears less often but is rare in non-Python books, so it gets a high TF-IDF score.",
+      "deeper": "TF-IDF is a sparse, bag-of-words representation — it discards word order and semantics. Modern alternatives like word2vec, GloVe, or transformer embeddings (BERT) capture context and meaning, but TF-IDF is still competitive for short-text classification tasks.",
+      "summary": "TF-IDF turns text into numbers by rewarding words that are distinctive to a document and penalising words that are common everywhere.",
+      "practice_questions": [
+        "Compute TF-IDF by hand for the word 'cat' in the sentence 'the cat sat' given a corpus of 10 documents where 'cat' appears in 2.",
+        "Why would TF-IDF give the word 'the' a low score?"
+      ]
     },
     {
-      "tag": "definition",
-      "patterns": ["what is","define","meaning of","what does mean","what are","tell me about","explain what","describe","definition of"],
-      "responses": [{"short": "A definition explains the meaning of a term or concept.","explanation": "When you ask 'what is X?', you're looking for a clear, simple explanation of X. Definitions usually state what something IS and what it DOES.","example": "What is a list? A list is a collection of items stored in a single variable. Example: fruits = ['apple', 'banana', 'cherry']","summary": "Definitions give you the foundation to understand any topic."}]
+      "tag": "logreg_nlp",
+      "patterns": [
+        "logistic regression", "explain logistic regression", "what is logistic regression",
+        "how does logistic regression work", "logistic regression for NLP",
+        "logistic regression text classification", "logreg", "log reg",
+        "logistic regression classifier", "softmax", "multinomial logistic regression",
+        "why use logistic regression", "logistic regression example"
+      ],
+      "answer": "Logistic Regression is a linear classifier that estimates the probability of each class using the logistic (sigmoid) or softmax function.",
+      "steps": [
+        "Take the TF-IDF vector x for the input text.",
+        "Compute a score for each class k: z_k = w_k · x + b_k.",
+        "Apply softmax to convert raw scores into probabilities: P(class=k) = exp(z_k) / Σ exp(z_j).",
+        "Predict the class with the highest probability.",
+        "During training, minimise cross-entropy loss using gradient descent (or a closed-form solver like L-BFGS)."
+      ],
+      "analogy": "Logistic Regression is like a team of judges, one per class. Each judge looks at the same TF-IDF evidence and scores it based on weights they've learned. The judge with the highest score wins, and softmax converts their scores into a probability distribution.",
+      "deeper": "Logistic Regression has a convex loss surface, so it is guaranteed to find the global minimum. It is interpretable (feature weights show which words drive each class), but it cannot capture non-linear interactions. Neural networks or gradient-boosted trees handle non-linearity at the cost of interpretability.",
+      "summary": "Logistic Regression maps TF-IDF features to class probabilities via learned linear weights — simple, fast, and surprisingly effective for text classification.",
+      "practice_questions": [
+        "If the logistic regression model outputs probabilities [0.1, 0.7, 0.2] for classes A, B, C, which class is predicted?",
+        "What happens to the model's confidence when two classes have very similar TF-IDF vectors?"
+      ]
     },
     {
-      "tag": "example",
-      "patterns": ["give me an example","show me an example","example of","can you show","demonstrate","sample code","how does it look","show me how"],
-      "responses": [{"short": "Sure! Here's a simple example to illustrate the concept.","explanation": "Examples make abstract ideas concrete. They show you HOW something works in practice, not just what it is in theory.","example": "Example of a Python function:\n\ndef greet(name):\n    return f'Hello, {name}!'\n\nprint(greet('Alice'))  # Output: Hello, Alice!","summary": "Examples are the best way to truly understand a concept."}]
-    },
-    {
-      "tag": "explain_concept",
-      "patterns": ["explain","how does work","can you explain","break it down","help me understand","walk me through","what does it mean","how do I understand","clarify","elaborate"],
-      "responses": [{"short": "Let me break this concept down step by step.","explanation": "Understanding a concept means knowing: (1) What it is, (2) Why it exists, (3) How it works, and (4) When to use it. Always start simple and build up.","example": "Explaining recursion:\nStep 1: A function calls itself.\nStep 2: It needs a base case to stop.\nStep 3: def factorial(n): return 1 if n==0 else n * factorial(n-1)","summary": "Breaking concepts into small steps makes even hard topics easy."}]
-    },
-    {
-      "tag": "coding_help",
-      "patterns": ["how do I code","write code","python code","programming help","debug","syntax error","how to write a function","how to use a loop","coding question","help with code","write a program","script"],
-      "responses": [{"short": "Let's work through the coding problem together!", "explanation": "When writing code, follow these steps:\n1. Understand the problem.\n2. Plan your solution (pseudocode).\n3. Write the code.\n4. Test with examples.\n5. Debug if needed.","example": "Problem: Print numbers 1 to 5.\nSolution:\nfor i in range(1, 6):\n    print(i)\n\nOutput: 1 2 3 4 5","summary": "Good code starts with a clear plan before you type anything."}]
-    },
-    {
-      "tag": "math_help",
-      "patterns": ["math problem","solve","calculate","equation","algebra","geometry","arithmetic","fraction","percentage","statistics","help with math","what is the formula","how do I solve"],
-      "responses": [{"short": "Math is all about patterns and logic — let's solve it!","explanation": "To solve a math problem:\n1. Read carefully.\n2. Identify what you know and what you need.\n3. Choose the right formula or method.\n4. Show your work step by step.","example": "Problem: What is 20% of 150?\nStep 1: Convert 20% to 20/100 = 0.2\nStep 2: Multiply 0.2 x 150 = 30\nAnswer: 30","summary": "Break every math problem into small, manageable steps."}]
-    },
-    {
-      "tag": "machine_learning",
-      "patterns": ["machine learning","ML","what is ML","explain machine learning","neural network","deep learning","AI","artificial intelligence","model training","supervised learning","unsupervised learning"],
-      "responses": [{"short": "Machine Learning lets computers learn from data without being explicitly programmed.","explanation": "In ML, we feed data to an algorithm, it finds patterns, and uses those patterns to make predictions. Types include:\n- Supervised (labeled data)\n- Unsupervised (unlabeled data)\n- Reinforcement (reward-based)","example": "Supervised Learning Example:\nData: [height to weight]\nModel learns: taller people tend to weigh more.\nPrediction: Given height=6ft, predict weight approx 180lbs","summary": "ML is about teaching machines to find patterns and make decisions."}]
-    },
-    {
-      "tag": "data_structures",
-      "patterns": ["data structure","array","linked list","stack","queue","tree","graph","hash map","dictionary","what is a list","what is a tuple","what is a set"],
-      "responses": [{"short": "Data structures are ways to organize and store data efficiently.","explanation": "Choosing the right data structure is key to writing efficient code. Common ones:\n- List/Array: ordered collection\n- Stack: last in, first out (LIFO)\n- Queue: first in, first out (FIFO)\n- Dictionary: key-value pairs","example": "Python Dictionary:\nstudent = {'name': 'Alice', 'age': 20, 'grade': 'A'}\nprint(student['name'])  // Output: Alice","summary": "The right data structure makes your code faster and cleaner."}]
-    },
-    {
-      "tag": "nlp",
-      "patterns": ["NLP","natural language processing","what is NLP","text processing","tokenization","stemming","lemmatization","TF-IDF","word embeddings","sentiment analysis","text classification"],
-      "responses": [{"short": "NLP helps computers understand and work with human language.","explanation": "NLP stands for Natural Language Processing. It involves:\n1. Tokenization: splitting text into words\n2. Stopword removal: removing common words\n3. Stemming/Lemmatization: reducing words to root form\n4. Vectorization: converting text to numbers for ML","example": "Tokenization:\nText: 'I love Python'\nTokens: ['I', 'love', 'Python']\n\nTF-IDF converts these tokens into numerical vectors for classification.","summary": "NLP bridges the gap between human language and machine understanding."}]
-    },
-    {
-      "tag": "unknown",
+      "tag": "fallback",
       "patterns": [],
-      "responses": [{"short": "I'm not sure I understood that.","explanation": "I'm a learning assistant focused on topics like programming, math, machine learning, and NLP. I may not have an answer for everything yet!","example": "Try asking things like:\n- 'What is recursion?'\n- 'Explain machine learning'\n- 'Give me a Python example'\n- 'Help with a math problem'","summary": "Try rephrasing your question — I'll do my best to help!"}]
+      "answer": "I'm not sure I understood that question.",
+      "steps": [
+        "Try rephrasing your question.",
+        "Ask about a specific NLP topic such as TF-IDF, tokenisation, or logistic regression.",
+        "You can also specify your level: beginner, intermediate, or advanced."
+      ],
+      "analogy": "Even a knowledgeable tutor sometimes needs you to ask the question a different way.",
+      "deeper": "",
+      "summary": "Try asking about a specific NLP or ML concept — I'll do my best to help.",
+      "practice_questions": [
+        "What NLP concept would you like to explore today?"
+      ]
     }
   ]
 }
